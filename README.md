@@ -134,7 +134,10 @@ trustguard-ai/
 
 ## 📄 License
 
-MIT License — Built for Agents League Hackathon 2026
+This project is licensed under the [PolyForm Noncommercial License 1.0.0](LICENSE).
+
+You're free to use, study, modify, and share this code for personal, educational, or research purposes. **Commercial use is not permitted without prior written permission** from the author (Abd.moh9999@yahoo.com).
+
 
 ---
 
