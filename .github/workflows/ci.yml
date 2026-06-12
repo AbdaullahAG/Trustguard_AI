@@ -24,7 +24,8 @@ jobs:
           pip install flake8 pytest
 
       - name: Lint
-        run: flake8 agents.py app.py --max-line-length=120 --ignore=E501,W503
+        run: flake8 agents.py app.py --max-line-length=120 --ignore=W501,W503
+        
       - name: Unit tests (no Azure API needed)
         run: pytest tests/test_local.py -v
         env:
