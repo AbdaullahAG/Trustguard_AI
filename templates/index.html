@@ -1,0 +1,1988 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TrustGuard AI — Privacy Policy Analyzer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        :root {
+            --bg: #0f1117;
+            --bg2: #1a1d27;
+            --bg3: #222636;
+            --bg4: #2a2f44;
+            --border: #2e3347;
+            --text: #e8eaf0;
+            --muted: #7b8099;
+            --accent: #6c63ff;
+            --danger: #ff4d6d;
+            --warn: #ffb347;
+            --success: #4ade80;
+            --info: #38bdf8;
+            --radius: 12px;
+            --radius-sm: 8px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            min-height: 100vh;
+        }
+
+        /* ── NAV ── */
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border);
+            background: rgba(15, 17, 23, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .logo i {
+            color: var(--accent);
+            font-size: 22px;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-badge {
+            font-size: 11px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            background: #6c63ff22;
+            color: var(--accent);
+            border: 1px solid #6c63ff44;
+        }
+
+        .nav-link-btn {
+            font-size: 12px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: var(--bg3);
+            color: var(--muted);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all .2s;
+        }
+
+        .nav-link-btn:hover {
+            color: var(--text);
+            border-color: var(--accent);
+        }
+
+        /* ── HERO ── */
+        .hero {
+            text-align: center;
+            padding: 3rem 1rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: -120px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 480px;
+            height: 240px;
+            background: radial-gradient(ellipse at center, #6c63ff33, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: .75rem;
+            position: relative;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(135deg, var(--accent), var(--info));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            color: var(--muted);
+            font-size: 1rem;
+            max-width: 580px;
+            margin: 0 auto;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        /* ── MAIN LAYOUT ── */
+        .container {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 0 1rem 4rem;
+        }
+
+        /* ── INPUT CARD ── */
+        .input-card {
+            background: rgba(26, 29, 39, 0.7);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .input-label {
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .url-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .url-row input {
+            flex: 1;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            color: var(--text);
+            font-size: 14px;
+            outline: none;
+            transition: border .2s;
+        }
+
+        .url-row input:focus {
+            border-color: var(--accent);
+        }
+
+        .site-input {
+            width: 100%;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            color: var(--text);
+            font-size: 14px;
+            outline: none;
+            margin-bottom: 1rem;
+            transition: border .2s;
+        }
+
+        .site-input:focus {
+            border-color: var(--accent);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 1rem 0;
+        }
+
+        .divider hr {
+            flex: 1;
+            border: none;
+            border-top: 1px solid var(--border);
+        }
+
+        .divider span {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        textarea {
+            width: 100%;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 12px 14px;
+            color: var(--text);
+            font-size: 13px;
+            resize: vertical;
+            min-height: 120px;
+            font-family: inherit;
+            line-height: 1.6;
+            outline: none;
+            transition: border .2s;
+        }
+
+        textarea:focus {
+            border-color: var(--accent);
+        }
+
+        .examples {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        .ex-pill {
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--bg3);
+            color: var(--muted);
+            cursor: pointer;
+            transition: all .2s;
+        }
+
+        .ex-pill:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .analyze-btn {
+            width: 100%;
+            padding: 13px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: var(--radius-sm);
+            border: none;
+            background: linear-gradient(135deg, var(--accent), #8b83ff);
+            color: #fff;
+            cursor: pointer;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: opacity .2s, transform .1s;
+        }
+
+        .analyze-btn:hover {
+            opacity: .9;
+        }
+
+        .analyze-btn:active {
+            transform: scale(.99);
+        }
+
+        .analyze-btn:disabled {
+            opacity: .4;
+            cursor: not-allowed;
+        }
+
+        /* ── ERROR BANNER ── */
+        .error-banner {
+            display: none;
+            background: #ff4d6d1a;
+            border: 1px solid #ff4d6d44;
+            color: var(--danger);
+            border-radius: var(--radius-sm);
+            padding: 12px 16px;
+            margin-bottom: 1rem;
+            font-size: 13px;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* ── LOADING ── */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2.5rem;
+        }
+
+        .loading .spinner {
+            width: 44px;
+            height: 44px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading p {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .step-list {
+            list-style: none;
+            margin-top: 1rem;
+            display: inline-block;
+            text-align: left;
+        }
+
+        .step-list li {
+            font-size: 13px;
+            color: var(--muted);
+            padding: 4px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .step-list li.done {
+            color: var(--success);
+        }
+
+        .step-list li.active {
+            color: var(--text);
+        }
+
+        /* ── RESULTS ── */
+        #results {
+            display: none;
+        }
+
+        /* change banner */
+        .change-banner {
+            border-radius: var(--radius-sm);
+            padding: 12px 16px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+        }
+
+        .change-banner.changed {
+            background: #ff4d6d1a;
+            border: 1px solid #ff4d6d44;
+            color: var(--danger);
+        }
+
+        .change-banner.new {
+            background: #6c63ff1a;
+            border: 1px solid #6c63ff44;
+            color: var(--accent);
+        }
+
+        .change-banner.same {
+            background: #4ade801a;
+            border: 1px solid #4ade8044;
+            color: var(--success);
+        }
+
+        /* score card */
+        .score-card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .score-ring {
+            position: relative;
+            width: 90px;
+            height: 90px;
+            flex-shrink: 0;
+        }
+
+        .score-ring svg {
+            transform: rotate(-90deg);
+        }
+
+        .score-ring .ring-bg {
+            fill: none;
+            stroke: var(--bg3);
+            stroke-width: 8;
+        }
+
+        .score-ring .ring-val {
+            fill: none;
+            stroke-width: 8;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s ease;
+        }
+
+        .score-center {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .score-num {
+            font-size: 22px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .score-of {
+            font-size: 10px;
+            color: var(--muted);
+        }
+
+        .score-info {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .score-info h2 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .score-info p {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.6;
+            max-width: 520px;
+        }
+
+        .recommendation {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-top: 8px;
+            font-weight: 600;
+        }
+
+        .score-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-left: auto;
+        }
+
+        .icon-btn {
+            font-size: 12px;
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            background: var(--bg3);
+            color: var(--text);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            transition: all .2s;
+        }
+
+        .icon-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .icon-btn:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+        /* ── TABS ── */
+        .tab-bar {
+            display: flex;
+            gap: 4px;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+            scrollbar-width: thin;
+        }
+
+        .tab-bar::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .tab-bar::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 500;
+            padding: 10px 16px;
+            cursor: pointer;
+            white-space: nowrap;
+            border-bottom: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all .15s;
+        }
+
+        .tab-btn:hover {
+            color: var(--text);
+        }
+
+        .tab-btn.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        .tab-pill {
+            font-size: 10px;
+            padding: 1px 6px;
+            border-radius: 10px;
+            background: var(--bg3);
+            color: var(--muted);
+            font-weight: 700;
+        }
+
+        .tab-btn.active .tab-pill {
+            background: #6c63ff33;
+            color: var(--accent);
+        }
+
+        .tab-panel {
+            display: none;
+            animation: fadeIn .25s ease;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* section card */
+        .section-card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .sec-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: space-between;
+        }
+
+        .sec-title-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sec-title i {
+            color: var(--accent);
+        }
+
+        .sec-sub {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: -8px;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .grade-badge {
+            font-size: 12px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+
+        .grade-A {
+            background: #4ade8022;
+            color: var(--success);
+        }
+
+        .grade-B {
+            background: #4ade8022;
+            color: var(--success);
+        }
+
+        .grade-C {
+            background: #ffb34722;
+            color: var(--warn);
+        }
+
+        .grade-D {
+            background: #ff4d6d22;
+            color: var(--danger);
+        }
+
+        .grade-F {
+            background: #ff4d6d33;
+            color: var(--danger);
+        }
+
+        /* red flags / patterns list */
+        .flag {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 10px 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .flag:first-of-type {
+            border-top: none;
+            padding-top: 0;
+        }
+
+        .flag-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-top: 4px;
+        }
+
+        .flag-dot.critical,
+        .flag-dot.high {
+            background: var(--danger);
+            box-shadow: 0 0 6px var(--danger);
+        }
+
+        .flag-dot.medium {
+            background: var(--warn);
+            box-shadow: 0 0 6px var(--warn);
+        }
+
+        .flag-dot.low {
+            background: var(--info);
+            box-shadow: 0 0 6px var(--info);
+        }
+
+        .flag-body {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .flag-body strong {
+            font-size: 13px;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .flag-body span {
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .flag-evidence {
+            display: block;
+            font-size: 11px;
+            color: var(--muted);
+            background: var(--bg3);
+            border-left: 2px solid var(--border);
+            padding: 6px 10px;
+            margin-top: 6px;
+            border-radius: 4px;
+            font-style: italic;
+        }
+
+        .sev-badge {
+            font-size: 10px;
+            padding: 2px 7px;
+            border-radius: 20px;
+            margin-left: 6px;
+            font-weight: 600;
+        }
+
+        .sev-critical,
+        .sev-high {
+            background: #ff4d6d22;
+            color: var(--danger);
+        }
+
+        .sev-medium {
+            background: #ffb34722;
+            color: var(--warn);
+        }
+
+        .sev-low {
+            background: #38bdf822;
+            color: var(--info);
+        }
+
+        .empty-state {
+            font-size: 12px;
+            color: var(--muted);
+            text-align: center;
+            padding: 1.5rem 0;
+        }
+
+        /* compliance grid */
+        .comp-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .comp-item {
+            background: var(--bg3);
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            text-align: center;
+        }
+
+        .comp-item i {
+            font-size: 22px;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .comp-item strong {
+            font-size: 13px;
+            display: block;
+        }
+
+        .comp-item small {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .compliant {
+            color: var(--success);
+        }
+
+        .partial {
+            color: var(--warn);
+        }
+
+        .non-compliant {
+            color: var(--danger);
+        }
+
+        /* benchmark bars */
+        .bench-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .bench-row:first-of-type {
+            border-top: none;
+            padding-top: 0;
+        }
+
+        .bench-name {
+            width: 90px;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .bench-bar-wrap {
+            flex: 1;
+            background: var(--bg3);
+            border-radius: 4px;
+            height: 8px;
+            overflow: hidden;
+        }
+
+        .bench-bar {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 1s ease;
+            width: 0%;
+        }
+
+        .bench-score {
+            width: 32px;
+            font-size: 12px;
+            color: var(--muted);
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .bench-verdict {
+            width: 68px;
+            font-size: 11px;
+            font-weight: 600;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .verdict-safer {
+            color: var(--success);
+        }
+
+        .verdict-riskier {
+            color: var(--danger);
+        }
+
+        .verdict-similar {
+            color: var(--warn);
+        }
+
+        /* ranking statement */
+        .ranking-box {
+            background: var(--bg3);
+            border-radius: var(--radius-sm);
+            padding: 12px 16px;
+            margin-top: 1rem;
+            font-size: 13px;
+            color: var(--text);
+            line-height: 1.6;
+            border-left: 3px solid var(--accent);
+        }
+
+        /* summary */
+        .verdict-text {
+            font-size: 14px;
+            color: var(--muted);
+            line-height: 1.8;
+        }
+
+        /* readability gauge */
+        .gauge-row {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 1.25rem;
+        }
+
+        .gauge {
+            position: relative;
+            width: 110px;
+            height: 60px;
+            flex-shrink: 0;
+        }
+
+        .gauge svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .gauge-label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 10px;
+            flex: 1;
+        }
+
+        .stat-box {
+            background: var(--bg3);
+            border-radius: var(--radius-sm);
+            padding: 10px 12px;
+            text-align: center;
+        }
+
+        .stat-box .val {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .stat-box .lbl {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        .jargon-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .jargon-pill {
+            font-size: 11px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            background: #ffb34722;
+            color: var(--warn);
+            border: 1px solid #ffb34744;
+        }
+
+        /* rights list */
+        .right-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 10px 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .right-row:first-of-type {
+            border-top: none;
+            padding-top: 0;
+        }
+
+        .right-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .right-icon.granted {
+            background: #4ade8022;
+            color: var(--success);
+        }
+
+        .right-icon.partial {
+            background: #ffb34722;
+            color: var(--warn);
+        }
+
+        .right-icon.missing {
+            background: #ff4d6d22;
+            color: var(--danger);
+        }
+
+        .right-body {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .right-body strong {
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 2px;
+        }
+
+        .right-body span {
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .ease-tag {
+            font-size: 10px;
+            padding: 1px 8px;
+            border-radius: 10px;
+            background: var(--bg3);
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        .rights-meta {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .meta-pill {
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: var(--bg3);
+            color: var(--muted);
+            border: 1px solid var(--border);
+        }
+
+        /* manipulation tactics */
+        .tactic-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .tactic-pill {
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: #ff4d6d1a;
+            color: var(--danger);
+            border: 1px solid #ff4d6d33;
+        }
+
+        /* extracted clauses */
+        .clause-block {
+            margin-bottom: 14px;
+        }
+
+        .clause-block h4 {
+            font-size: 12px;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            margin-bottom: 6px;
+        }
+
+        .clause-block ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .clause-block li {
+            font-size: 13px;
+            color: var(--text);
+            line-height: 1.6;
+            padding-left: 14px;
+            position: relative;
+        }
+
+        .clause-block li::before {
+            content: "—";
+            position: absolute;
+            left: 0;
+            color: var(--muted);
+        }
+
+        .clause-block p {
+            font-size: 13px;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* history */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .6);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-box {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            max-width: 480px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-box h3 {
+            font-size: 15px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--muted);
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .history-row {
+            background: var(--bg3);
+            border-radius: var(--radius-sm);
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .history-row strong {
+            color: var(--text);
+            font-size: 13px;
+            display: block;
+            margin-bottom: 4px;
+            text-transform: capitalize;
+        }
+
+        /* responsive */
+        @media(max-width:600px) {
+            .score-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .score-actions {
+                margin-left: 0;
+                flex-direction: row;
+                width: 100%;
+            }
+
+            .icon-btn {
+                flex: 1;
+                justify-content: center;
+            }
+
+            .comp-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            nav {
+                padding: 1rem;
+            }
+
+            .gauge-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        /* ── TrustGuard Index ── */
+        .tgi-box {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 12px 16px;
+            text-align: center;
+            min-width: 130px;
+            flex-shrink: 0;
+        }
+        .tgi-label {
+            font-size: 10px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            margin-bottom: 4px;
+        }
+        .tgi-num {
+            font-size: 28px;
+            font-weight: 700;
+            line-height: 1;
+            transition: color .4s;
+        }
+        .tgi-sub {
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 3px;
+        }
+        .tgi-formula {
+            font-size: 9px;
+            color: var(--muted);
+            margin-top: 5px;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="logo"><i class="fa-solid fa-shield-halved"></i> Trust<span>Guard</span> AI</div>
+        <div class="nav-right">
+            <button class="nav-link-btn" onclick="openHistory()"><i class="fa-solid fa-clock-rotate-left"></i>
+                History</button>
+            <span class="nav-badge">6 Agents · Microsoft Foundry</span>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <h1>Privacy Policies,<br /><span>Decoded by AI</span></h1>
+        <p>Paste any privacy policy or URL — six specialized AI agents extract, reason, detect dark patterns, score
+            readability, audit your rights, and benchmark it against major platforms.</p>
+    </div>
+
+    <div class="container">
+
+        <!-- ERROR BANNER -->
+        <div class="error-banner" id="errorBanner">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <span id="errorText"></span>
+        </div>
+
+        <!-- INPUT CARD -->
+        <div class="input-card">
+            <div class="input-label"><i class="fa-solid fa-globe"></i> Site name (optional)</div>
+            <input class="site-input" id="siteName" placeholder="e.g. TikTok, MyBank, Spotify..." />
+
+            <div class="input-label"><i class="fa-solid fa-link"></i> Paste a URL</div>
+            <div class="url-row">
+                <input type="text" id="urlInput" placeholder="https://example.com/privacy-policy" />
+            </div>
+
+            <div class="divider">
+                <hr /><span>or paste text</span>
+                <hr />
+            </div>
+
+            <div class="input-label"><i class="fa-solid fa-file-lines"></i> Privacy policy text</div>
+            <textarea id="policyText"
+                placeholder="Paste the full privacy policy or terms of service here..."></textarea>
+
+            <div class="examples">
+                <span style="font-size:12px;color:var(--muted);">Quick examples:</span>
+                <span class="ex-pill" onclick="loadExample('tiktok')">TikTok</span>
+                <span class="ex-pill" onclick="loadExample('facebook')">Facebook</span>
+                <span class="ex-pill" onclick="loadExample('whatsapp')">WhatsApp</span>
+            </div>
+
+            <button class="analyze-btn" id="analyzeBtn" onclick="analyze()">
+                <i class="fa-solid fa-magnifying-glass-chart"></i> Analyze with TrustGuard AI
+            </button>
+        </div>
+
+        <!-- LOADING -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Running multi-agent analysis…</p>
+            <ul class="step-list" id="stepList">
+                <li id="s0"><i class="fa-solid fa-circle-notch fa-spin"></i> Agent 1 — Extracting clauses…</li>
+                <li id="s1"><i class="fa-solid fa-clock"></i> Agent 2 — Reasoning legal risks…</li>
+                <li id="s2"><i class="fa-solid fa-clock"></i> Agent 3 — Detecting dark patterns…</li>
+                <li id="s3"><i class="fa-solid fa-clock"></i> Agent 4 — Scoring readability…</li>
+                <li id="s4"><i class="fa-solid fa-clock"></i> Agent 5 — Auditing user rights…</li>
+                <li id="s5"><i class="fa-solid fa-clock"></i> Agent 6 — Benchmarking…</li>
+            </ul>
+        </div>
+
+        <!-- RESULTS -->
+        <div id="results">
+
+            <!-- Change tracker banner -->
+            <div class="change-banner" id="changeBanner"></div>
+
+            <!-- Score -->
+            <div class="score-card">
+                <div class="score-ring">
+                    <svg width="90" height="90" viewBox="0 0 90 90">
+                        <circle class="ring-bg" cx="45" cy="45" r="37" />
+                        <circle class="ring-val" id="ringVal" cx="45" cy="45" r="37" stroke-dasharray="232"
+                            stroke-dashoffset="232" />
+                    </svg>
+                    <div class="score-center">
+                        <span class="score-num" id="scoreNum">0</span>
+                        <span class="score-of">/100</span>
+                    </div>
+                </div>
+                <div class="score-info">
+                    <h2 id="riskLevel">—</h2>
+                    <p id="verdict">—</p>
+                    <span class="recommendation" id="recBadge"></span>
+                </div>
+                <!-- TrustGuard Index -->
+                <div class="tgi-box" id="tgiBox">
+                    <div class="tgi-label">TrustGuard Index™</div>
+                    <div class="tgi-num" id="tgiNum">—</div>
+                    <div class="tgi-sub" id="tgiLabel">—</div>
+                    <div class="tgi-formula">risk 50% · dark 30% · rights 20%</div>
+                </div>
+                <div class="score-actions">
+                    <button class="icon-btn" id="exportBtn" onclick="exportPdf()">
+                        <i class="fa-solid fa-file-pdf"></i> Export PDF
+                    </button>
+                    <button class="icon-btn" onclick="window.print()">
+                        <i class="fa-solid fa-print"></i> Print
+                    </button>
+                </div>
+            </div>
+
+            <!-- TABS -->
+            <div class="tab-bar">
+                <button class="tab-btn active" data-tab="overview"><i class="fa-solid fa-flag"></i> Overview</button>
+                <button class="tab-btn" data-tab="darkpatterns"><i class="fa-solid fa-user-secret"></i> Dark Patterns
+                    <span class="tab-pill" id="dpPill">0</span></button>
+                <button class="tab-btn" data-tab="readability"><i class="fa-solid fa-book-open"></i>
+                    Readability</button>
+                <button class="tab-btn" data-tab="rights"><i class="fa-solid fa-scale-balanced"></i> Your
+                    Rights</button>
+                <button class="tab-btn" data-tab="compliance"><i class="fa-solid fa-gavel"></i> Compliance</button>
+                <button class="tab-btn" data-tab="benchmark"><i class="fa-solid fa-chart-bar"></i> Benchmark</button>
+                <button class="tab-btn" data-tab="extracted"><i class="fa-solid fa-list-check"></i> Extracted
+                    Clauses</button>
+            </div>
+
+            <!-- OVERVIEW PANEL -->
+            <div class="tab-panel active" data-panel="overview">
+                <div class="section-card">
+                    <div class="sec-title"><i class="fa-solid fa-flag"></i> Red Flags</div>
+                    <div id="flagsList"></div>
+                </div>
+                <div class="section-card">
+                    <div class="sec-title"><i class="fa-solid fa-notes-medical"></i> Plain-Language Summary</div>
+                    <p class="verdict-text" id="summaryText"></p>
+                </div>
+            </div>
+
+            <!-- DARK PATTERNS PANEL -->
+            <div class="tab-panel" data-panel="darkpatterns">
+                <div class="section-card">
+                    <div class="sec-title">
+                        <div class="sec-title-left"><i class="fa-solid fa-user-secret"></i> Dark Pattern Detection</div>
+                        <span class="grade-badge" id="transparencyGrade">—</span>
+                    </div>
+                    <div class="sec-sub" id="dpSummary"></div>
+                    <div class="stat-grid" style="margin-bottom:1rem;">
+                        <div class="stat-box">
+                            <div class="val" id="dpScore">—</div>
+                            <div class="lbl">Dark Pattern Score</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="val" id="dpCount">—</div>
+                            <div class="lbl">Patterns Found</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="val" id="dpGradeText">—</div>
+                            <div class="lbl">Transparency Grade</div>
+                        </div>
+                    </div>
+                    <div id="dpList"></div>
+                    <div id="dpTactics"></div>
+                </div>
+            </div>
+
+            <!-- READABILITY PANEL -->
+            <div class="tab-panel" data-panel="readability">
+                <div class="section-card">
+                    <div class="sec-title">
+                        <div class="sec-title-left"><i class="fa-solid fa-book-open"></i> Readability Analysis</div>
+                        <span class="grade-badge" id="readGrade">—</span>
+                    </div>
+                    <div class="sec-sub" id="readSummary"></div>
+                    <div class="gauge-row">
+                        <div class="gauge">
+                            <svg viewBox="0 0 110 60">
+                                <path d="M5,55 A50,50 0 0,1 105,55" fill="none" stroke="var(--bg3)" stroke-width="8" />
+                                <path id="gaugeArc" d="M5,55 A50,50 0 0,1 105,55" fill="none" stroke="var(--accent)"
+                                    stroke-width="8" stroke-linecap="round" stroke-dasharray="157"
+                                    stroke-dashoffset="157" />
+                            </svg>
+                            <div class="gauge-label" id="gaugeLabel">—</div>
+                        </div>
+                        <div class="stat-grid">
+                            <div class="stat-box">
+                                <div class="val" id="fkGrade">—</div>
+                                <div class="lbl">Grade Level</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="val" id="wordCount">—</div>
+                                <div class="lbl">Words</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="val" id="avgSentence">—</div>
+                                <div class="lbl">Avg Sentence Len</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="val" id="jargonCount">—</div>
+                                <div class="lbl">Jargon Terms</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="jargonExamples"></div>
+                    <div id="accessibilityIssues" style="margin-top:1rem;"></div>
+                </div>
+            </div>
+
+            <!-- RIGHTS PANEL -->
+            <div class="tab-panel" data-panel="rights">
+                <div class="section-card">
+                    <div class="sec-title">
+                        <div class="sec-title-left"><i class="fa-solid fa-scale-balanced"></i> Your User Rights</div>
+                        <span class="grade-badge" id="rightsScoreBadge">—</span>
+                    </div>
+                    <div class="sec-sub" id="rightsSummary"></div>
+                    <div id="rightsList"></div>
+                    <div class="rights-meta" id="rightsMeta"></div>
+                </div>
+            </div>
+
+            <!-- COMPLIANCE PANEL -->
+            <div class="tab-panel" data-panel="compliance">
+                <div class="section-card">
+                    <div class="sec-title"><i class="fa-solid fa-gavel"></i> Legal Framework Compliance</div>
+                    <div class="sec-sub">Assessed against six major privacy regulations worldwide.</div>
+                    <div class="comp-grid" id="compGrid"></div>
+                </div>
+            </div>
+
+            <!-- BENCHMARK PANEL -->
+            <div class="tab-panel" data-panel="benchmark">
+                <div class="section-card">
+                    <div class="sec-title"><i class="fa-solid fa-chart-bar"></i> Policy DNA — Benchmark Comparison</div>
+                    <div id="benchRows"></div>
+                    <div class="ranking-box" id="rankingBox"></div>
+                </div>
+            </div>
+
+            <!-- EXTRACTED CLAUSES PANEL -->
+            <div class="tab-panel" data-panel="extracted">
+                <div class="section-card">
+                    <div class="sec-title"><i class="fa-solid fa-list-check"></i> Extracted Clauses</div>
+                    <div id="extractedContent"></div>
+                </div>
+            </div>
+
+        </div><!-- /results -->
+    </div><!-- /container -->
+
+    <!-- HISTORY MODAL -->
+    <div class="modal-overlay" id="historyModal">
+        <div class="modal-box">
+            <h3>
+                <span><i class="fa-solid fa-clock-rotate-left"></i> Policy Change History</span>
+                <button class="modal-close" onclick="closeHistory()"><i class="fa-solid fa-xmark"></i></button>
+            </h3>
+            <div id="historyContent"></div>
+        </div>
+    </div>
+
+    <script>
+        const EXAMPLES = {
+            tiktok: {
+                name: "TikTok",
+                text: `TikTok collects information you provide: profile info, user content, messages, purchase info.
+We collect technical data: IP addresses, device identifiers, cookie data, browser and OS type.
+We collect location info derived from SIM card and IP address.
+We share information with business partners, advertising partners, and analytics companies.
+We may share data with law enforcement or government bodies upon request.
+We retain data as long as necessary for business purposes.
+Users in some regions can request data deletion but we may retain certain data.
+We use data to show targeted ads based on your behavior and interests.
+We share with third parties who may combine it with other information they have about you.
+Our service is not intended for children under 13.`
+            },
+            facebook: {
+                name: "Facebook",
+                text: `We collect the content, communications and other information you provide when you use our Products.
+We collect information about the people, accounts, hashtags, groups and Pages you are connected to.
+We receive information about you from partners and third parties.
+We use the information we have to deliver our Products, including to personalize features and content.
+We use your information to serve you relevant ads and sponsored content.
+We share your information with third-party partners who use it to show you ads, even off our platforms.
+We may disclose your information in response to legal requests from governments or law enforcement.
+We store data until it is no longer necessary or until your account is deleted.`
+            },
+            whatsapp: {
+                name: "WhatsApp",
+                text: `WhatsApp collects your phone number, profile name, profile photo, status message.
+We collect information about your activity: how you interact with others, your status messages.
+We collect device information: hardware model, OS information, browser type, IP address, mobile network.
+We share information with the Meta Companies including Facebook and Instagram.
+We may share information with third-party service providers.
+We collect location information from your device.
+Government authorities may request data in criminal investigations.
+WhatsApp uses end-to-end encryption for messages but metadata is collected and retained.`
+            }
+        };
+
+        let lastResult = null;
+
+        function loadExample(key) {
+            document.getElementById('siteName').value = EXAMPLES[key].name;
+            document.getElementById('policyText').value = EXAMPLES[key].text;
+            document.getElementById('urlInput').value = '';
+        }
+
+        // ── Tabs ──
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                btn.classList.add('active');
+                document.querySelector(`.tab-panel[data-panel="${btn.dataset.tab}"]`).classList.add('active');
+            });
+        });
+
+        // ── animated step indicator (6 agents) ──
+        let stepTimer = null;
+        function startSteps() {
+            let step = 0;
+            const ids = ['s0', 's1', 's2', 's3', 's4', 's5'];
+            const labels = [
+                '<i class="fa-solid fa-circle-notch fa-spin"></i> Agent 1 — Extracting clauses…',
+                '<i class="fa-solid fa-circle-notch fa-spin"></i> Agent 2 — Reasoning legal risks…',
+                '<i class="fa-solid fa-circle-notch fa-spin"></i> Agent 3 — Detecting dark patterns…',
+                '<i class="fa-solid fa-circle-notch fa-spin"></i> Agent 4 — Scoring readability…',
+                '<i class="fa-solid fa-circle-notch fa-spin"></i> Agent 5 — Auditing user rights…',
+                '<i class="fa-solid fa-circle-notch fa-spin"></i> Agent 6 — Benchmarking…'
+            ];
+            const done = '<i class="fa-solid fa-circle-check" style="color:var(--success)"></i>';
+            ids.forEach((id, i) => {
+                const el = document.getElementById(id);
+                el.className = '';
+                el.innerHTML = labels[i].replace('fa-spin', '');
+            });
+            document.getElementById('s0').innerHTML = labels[0];
+            document.getElementById('s0').className = 'active';
+            stepTimer = setInterval(() => {
+                if (step < ids.length - 1) {
+                    const labelText = document.getElementById(ids[step]).innerText;
+                    document.getElementById(ids[step]).innerHTML = done + ' ' + labelText;
+                    document.getElementById(ids[step]).className = 'done';
+                    step++;
+                    document.getElementById(ids[step]).innerHTML = labels[step];
+                    document.getElementById(ids[step]).className = 'active';
+                }
+            }, 4000);
+        }
+        function stopSteps() {
+            clearInterval(stepTimer);
+            ['s0', 's1', 's2', 's3', 's4', 's5'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el.className !== 'done') {
+                    const done = '<i class="fa-solid fa-circle-check" style="color:var(--success)"></i>';
+                    el.innerHTML = done + ' ' + el.innerText;
+                    el.className = 'done';
+                }
+            });
+        }
+
+        function showError(msg) {
+            const banner = document.getElementById('errorBanner');
+            document.getElementById('errorText').textContent = msg;
+            banner.style.display = 'flex';
+            banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        function hideError() {
+            document.getElementById('errorBanner').style.display = 'none';
+        }
+
+        async function analyze() {
+            const url = document.getElementById('urlInput').value.trim();
+            const text = document.getElementById('policyText').value.trim();
+            const siteName = document.getElementById('siteName').value.trim() || 'Unknown Site';
+
+            if (!url && text.length < 50) {
+                showError('Please paste a policy text (min 50 characters) or a URL.');
+                return;
+            }
+
+            hideError();
+            document.getElementById('analyzeBtn').disabled = true;
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+            startSteps();
+
+            try {
+                const res = await fetch('/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url, text, site_name: siteName })
+                });
+                const data = await res.json();
+                if (!res.ok || data.error) {
+                    showError(data.error || 'Analysis failed. Please try again.');
+                    return;
+                }
+                stopSteps();
+                lastResult = data;
+                renderResults(data);
+            } catch (e) {
+                showError('Request failed: ' + e.message);
+            } finally {
+                stopSteps();
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('analyzeBtn').disabled = false;
+            }
+        }
+
+        async function exportPdf() {
+            if (!lastResult) return;
+            const btn = document.getElementById('exportBtn');
+            const original = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generating…';
+            try {
+                const res = await fetch('/export-pdf', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(lastResult)
+                });
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({}));
+                    throw new Error(err.error || 'PDF generation failed.');
+                }
+                const blob = await res.blob();
+                const a = document.createElement('a');
+                const cd = res.headers.get('Content-Disposition') || '';
+                const match = cd.match(/filename="?([^"]+)"?/);
+                a.href = URL.createObjectURL(blob);
+                a.download = match ? match[1] : `TrustGuard_${(lastResult.site || 'report').replace(/\\s+/g, '_')}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+            } catch (e) {
+                showError(e.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = original;
+            }
+        }
+
+        // ── History modal ──
+        async function openHistory() {
+            const modal = document.getElementById('historyModal');
+            const content = document.getElementById('historyContent');
+            content.innerHTML = '<div class="empty-state"><i class="fa-solid fa-spinner fa-spin"></i> Loading…</div>';
+            modal.style.display = 'flex';
+            try {
+                const res = await fetch('/history');
+                const data = await res.json();
+                const keys = Object.keys(data);
+                if (!keys.length) {
+                    content.innerHTML = '<div class="empty-state">No analysis history yet. Analyze a site to start tracking changes.</div>';
+                    return;
+                }
+                content.innerHTML = keys.map(k => {
+                    const h = data[k];
+                    const date = h.date ? new Date(h.date).toLocaleString() : '—';
+                    const changes = h.change_count || 0;
+                    return `<div class="history-row">
+                        <strong>${k.replace(/_/g, ' ')}</strong>
+                        Last checked: ${date}<br/>
+                        Changes detected: ${changes}
+                    </div>`;
+                }).join('');
+            } catch (e) {
+                content.innerHTML = `<div class="empty-state">Failed to load history: ${e.message}</div>`;
+            }
+        }
+        function closeHistory() {
+            document.getElementById('historyModal').style.display = 'none';
+        }
+        document.getElementById('historyModal').addEventListener('click', (e) => {
+            if (e.target.id === 'historyModal') closeHistory();
+        });
+
+        // ── Helpers ──
+        function riskColor(score) {
+            if (score >= 75) return 'var(--danger)';
+            if (score >= 50) return 'var(--warn)';
+            if (score >= 25) return '#a78bfa';
+            return 'var(--success)';
+        }
+
+        function recStyle(rec) {
+            const map = {
+                'Use freely': { bg: '#4ade8022', color: 'var(--success)', icon: 'fa-circle-check' },
+                'Use with caution': { bg: '#ffb34722', color: 'var(--warn)', icon: 'fa-triangle-exclamation' },
+                'Avoid if possible': { bg: '#ff4d6d22', color: 'var(--danger)', icon: 'fa-circle-xmark' },
+                'Avoid': { bg: '#ff4d6d33', color: 'var(--danger)', icon: 'fa-ban' },
+            };
+            return map[rec] || map['Use with caution'];
+        }
+
+        function complianceIcon(val) {
+            if (val === 'compliant') return { icon: 'fa-circle-check', cls: 'compliant' };
+            if (val === 'partial') return { icon: 'fa-circle-half-stroke', cls: 'partial' };
+            return { icon: 'fa-circle-xmark', cls: 'non-compliant' };
+        }
+
+        function gradeClass(g) {
+            if (!g) return 'grade-C';
+            const letter = g.charAt(0).toUpperCase();
+            return `grade-${['A', 'B', 'C', 'D', 'F'].includes(letter) ? letter : 'C'}`;
+        }
+
+        function escapeHtml(str) {
+            if (str === undefined || str === null) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        }
+
+        // ── Main render ──
+        function renderResults(data) {
+            const analysis = data.risk_analysis || {};
+            const comparison = data.benchmark_comparison || {};
+            const change = data.change_info || {};
+            const dark = data.dark_patterns || {};
+            const readability = data.readability || {};
+            const rights = data.user_rights || {};
+            const extracted = data.extracted_clauses || {};
+
+            // ── change banner ──
+            const banner = document.getElementById('changeBanner');
+            if (change.changed) {
+                banner.className = 'change-banner changed';
+                banner.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> ${escapeHtml(change.message)}`;
+            } else if (!change.last_checked) {
+                banner.className = 'change-banner new';
+                banner.innerHTML = `<i class="fa-solid fa-star"></i> ${escapeHtml(change.message)}`;
+            } else {
+                banner.className = 'change-banner same';
+                banner.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${escapeHtml(change.message)}`;
+            }
+
+            // ── score ring ──
+            const score = analysis.risk_score || 0;
+            const circumference = 232;
+            const offset = circumference - (score / 100) * circumference;
+            const ring = document.getElementById('ringVal');
+            ring.style.stroke = riskColor(score);
+            setTimeout(() => ring.style.strokeDashoffset = offset, 50);
+            document.getElementById('scoreNum').textContent = score;
+            document.getElementById('scoreNum').style.color = riskColor(score);
+            document.getElementById('riskLevel').textContent = analysis.risk_level || '—';
+            document.getElementById('riskLevel').style.color = riskColor(score);
+            document.getElementById('verdict').textContent = analysis.verdict || '—';
+
+            const rec = comparison.recommendation || 'Use with caution';
+            const rs = recStyle(rec);
+            document.getElementById('recBadge').innerHTML = `<i class="fa-solid ${rs.icon}"></i> ${escapeHtml(rec)}`;
+            document.getElementById('recBadge').style.cssText = `background:${rs.bg};color:${rs.color};`;
+
+            // ── TrustGuard Index ──
+            const tgi      = data.trustguard_index ?? null;
+            const tgiLabel = data.trustguard_label  ?? '';
+            if (tgi !== null) {
+                const tgiColor = tgi < 25 ? 'var(--success)' : tgi < 45 ? '#a78bfa' : tgi < 65 ? 'var(--warn)' : 'var(--danger)';
+                document.getElementById('tgiNum').textContent   = tgi;
+                document.getElementById('tgiNum').style.color   = tgiColor;
+                document.getElementById('tgiLabel').textContent = tgiLabel;
+                document.getElementById('tgiLabel').style.color = tgiColor;
+                document.getElementById('tgiBox').style.borderColor = tgiColor + '66';
+            }
+
+
+            // ── red flags ──
+            const flags = analysis.red_flags || [];
+            document.getElementById('flagsList').innerHTML = flags.length ? flags.map(f => `
+    <div class="flag">
+      <div class="flag-dot ${f.severity}"></div>
+      <div class="flag-body">
+        <strong>${escapeHtml(f.title)} <span class="sev-badge sev-${f.severity}">${escapeHtml(f.severity)}</span></strong>
+        <span>${escapeHtml(f.implication)}</span>
+      </div>
+    </div>`).join('') : '<div class="empty-state">No major red flags detected.</div>';
+
+            document.getElementById('summaryText').textContent = analysis.verdict || '—';
+
+            // ── DARK PATTERNS ──
+            const dpScore = dark.dark_pattern_score ?? 0;
+            const patterns = dark.patterns || [];
+            document.getElementById('dpPill').textContent = dark.total_patterns_found ?? patterns.length ?? 0;
+            document.getElementById('dpScore').textContent = dpScore;
+            document.getElementById('dpCount').textContent = dark.total_patterns_found ?? patterns.length ?? 0;
+            const grade = dark.transparency_grade || '—';
+            document.getElementById('dpGradeText').textContent = grade;
+            const tg = document.getElementById('transparencyGrade');
+            tg.textContent = `Grade ${grade}`;
+            tg.className = `grade-badge ${gradeClass(grade)}`;
+            document.getElementById('dpSummary').textContent = dark.summary || '';
+            document.getElementById('dpList').innerHTML = patterns.length ? patterns.map(p => `
+    <div class="flag">
+      <div class="flag-dot ${p.severity}"></div>
+      <div class="flag-body">
+        <strong>${escapeHtml(p.title)} <span class="sev-badge sev-${p.severity}">${escapeHtml(p.severity)}</span></strong>
+        <span>${escapeHtml(p.explanation)}</span>
+        ${p.evidence ? `<span class="flag-evidence">"${escapeHtml(p.evidence)}"</span>` : ''}
+      </div>
+    </div>`).join('') : '<div class="empty-state">No dark patterns detected — this policy appears transparent.</div>';
+            const tactics = dark.manipulation_tactics || [];
+            document.getElementById('dpTactics').innerHTML = tactics.length
+                ? `<div class="tactic-list">${tactics.map(t => `<span class="tactic-pill"><i class="fa-solid fa-triangle-exclamation"></i> ${escapeHtml(t)}</span>`).join('')}</div>`
+                : '';
+
+            // ── READABILITY ──
+            const ease = readability.flesch_reading_ease ?? 0;
+            const rGrade = readability.readability_grade || '—';
+            const rg = document.getElementById('readGrade');
+            rg.textContent = `Grade ${rGrade}`;
+            rg.className = `grade-badge ${gradeClass(rGrade)}`;
+            document.getElementById('readSummary').textContent = readability.summary || '';
+            // gauge: arc length 157, full range 0-100 ease
+            const arcLen = 157;
+            const gaugeOffset = arcLen - (Math.max(0, Math.min(100, ease)) / 100) * arcLen;
+            const gaugeArc = document.getElementById('gaugeArc');
+            gaugeArc.style.stroke = ease >= 60 ? 'var(--success)' : ease >= 30 ? 'var(--warn)' : 'var(--danger)';
+            setTimeout(() => gaugeArc.style.strokeDashoffset = gaugeOffset, 50);
+            document.getElementById('gaugeLabel').textContent = ease;
+            document.getElementById('fkGrade').textContent = readability.flesch_grade_level ?? '—';
+            document.getElementById('wordCount').textContent = readability.word_count ?? '—';
+            document.getElementById('avgSentence').textContent = readability.avg_sentence_length ?? '—';
+            document.getElementById('jargonCount').textContent = readability.jargon_count ?? '—';
+            const jargonExamples = readability.jargon_examples || [];
+            document.getElementById('jargonExamples').innerHTML = jargonExamples.length
+                ? `<div class="input-label" style="margin-top:1rem;"><i class="fa-solid fa-book"></i> Complex Terms Found</div>
+                   <div class="jargon-list">${jargonExamples.map(j => `<span class="jargon-pill">${escapeHtml(j)}</span>`).join('')}</div>`
+                : '';
+            const issues = readability.accessibility_issues || [];
+            document.getElementById('accessibilityIssues').innerHTML = issues.length ? `
+                <div class="input-label"><i class="fa-solid fa-universal-access"></i> Accessibility Issues</div>
+                ${issues.map(i => `
+                <div class="flag">
+                  <div class="flag-dot medium"></div>
+                  <div class="flag-body">
+                    <strong>${escapeHtml(i.issue)}</strong>
+                    <span>${escapeHtml(i.suggestion)}</span>
+                  </div>
+                </div>`).join('')}` : '';
+
+            // ── RIGHTS ──
+            const rightsScore = rights.rights_score ?? 0;
+            const rsb = document.getElementById('rightsScoreBadge');
+            rsb.textContent = `${rightsScore}/100`;
+            rsb.className = `grade-badge ${rightsScore >= 75 ? 'grade-A' : rightsScore >= 50 ? 'grade-C' : 'grade-F'}`;
+            document.getElementById('rightsSummary').textContent = rights.summary || '';
+            const rightsArr = rights.rights || [];
+            document.getElementById('rightsList').innerHTML = rightsArr.length ? rightsArr.map(r => {
+                const status = r.status || 'missing';
+                const icon = status === 'granted' ? 'fa-check' : status === 'partial' ? 'fa-minus' : 'fa-xmark';
+                return `
+    <div class="right-row">
+      <div class="right-icon ${status}"><i class="fa-solid ${icon}"></i></div>
+      <div class="right-body">
+        <strong>${escapeHtml(r.right)} ${r.ease_of_use && r.ease_of_use !== 'not_specified' ? `<span class="ease-tag">${escapeHtml(r.ease_of_use)}</span>` : ''}</strong>
+        <span>${escapeHtml(r.details)}</span>
+      </div>
+    </div>`;
+            }).join('') : '<div class="empty-state">No rights information found.</div>';
+            const metaItems = [
+                rights.contact_method && rights.contact_method !== 'not_specified' ? `<i class="fa-solid fa-envelope"></i> Contact: ${escapeHtml(rights.contact_method)}` : null,
+                rights.response_time && rights.response_time !== 'not specified' ? `<i class="fa-solid fa-stopwatch"></i> Response time: ${escapeHtml(rights.response_time)}` : null,
+                rights.appeal_mechanism ? `<i class="fa-solid fa-circle-question"></i> Appeals: ${escapeHtml(rights.appeal_mechanism)}` : null,
+            ].filter(Boolean);
+            document.getElementById('rightsMeta').innerHTML = metaItems.map(m => `<span class="meta-pill">${m}</span>`).join('');
+
+            // ── COMPLIANCE (6 frameworks) ──
+            const frameworks = [
+                { key: 'gdpr_compliance', label: 'GDPR', region: 'EU' },
+                { key: 'ccpa_compliance', label: 'CCPA', region: 'California' },
+                { key: 'pdpa_compliance', label: 'PDPA', region: 'Thailand/SG' },
+                { key: 'pipeda_compliance', label: 'PIPEDA', region: 'Canada' },
+                { key: 'lgpd_compliance', label: 'LGPD', region: 'Brazil' },
+                { key: 'dpdpa_compliance', label: 'DPDPA', region: 'India' },
+            ];
+            document.getElementById('compGrid').innerHTML = frameworks.map(fw => {
+                const val = analysis[fw.key] || 'N/A';
+                const ci = complianceIcon(val);
+                return `<div class="comp-item"><i class="fa-solid fa-${ci.icon} ${ci.cls}"></i><strong class="${ci.cls}">${fw.label}</strong><small>${escapeHtml(val)}</small></div>`;
+            }).join('') + `
+            <div class="comp-item"><i class="fa-solid fa-${complianceIcon(analysis.data_retention_clarity === 'clear' ? 'compliant' : analysis.data_retention_clarity === 'vague' ? 'partial' : 'non-compliant').icon} ${complianceIcon(analysis.data_retention_clarity === 'clear' ? 'compliant' : analysis.data_retention_clarity === 'vague' ? 'partial' : 'non-compliant').cls}"></i><strong class="${complianceIcon(analysis.data_retention_clarity === 'clear' ? 'compliant' : analysis.data_retention_clarity === 'vague' ? 'partial' : 'non-compliant').cls}">Retention</strong><small>${escapeHtml(analysis.data_retention_clarity || '—')}</small></div>`;
+
+            // ── BENCHMARK ──
+            const comps = comparison.comparison || [];
+            const siteScore = comparison.site_score ?? score;
+            document.getElementById('benchRows').innerHTML = [
+                { service: data.site || 'This site', score: siteScore, verdict: '—', isThis: true },
+                ...comps
+            ].map(c => {
+                const cScore = c.score ?? c.benchmark_score ?? siteScore;
+                const color = riskColor(cScore);
+                const vClass = c.verdict === 'safer' ? 'verdict-safer' : c.verdict === 'riskier' ? 'verdict-riskier' : 'verdict-similar';
+                const vLabel = c.isThis ? '' : `<span class="bench-verdict ${vClass}">${escapeHtml(c.verdict || '')}</span>`;
+                return `<div class="bench-row">
+      <span class="bench-name">${escapeHtml(c.service)}</span>
+      <div class="bench-bar-wrap"><div class="bench-bar" style="width:${cScore}%;background:${color};"></div></div>
+      <span class="bench-score">${cScore}</span>
+      ${vLabel}
+    </div>`;
+            }).join('');
+            document.getElementById('rankingBox').textContent = comparison.ranking_statement || '';
+
+            // ── EXTRACTED CLAUSES ──
+            const listFields = [
+                ['data_collection', 'Data Collected', 'fa-database'],
+                ['data_sharing', 'Shared With', 'fa-share-nodes'],
+                ['user_rights', 'User Rights Mentioned', 'fa-scale-balanced'],
+                ['cookies_tracking', 'Tracking Technologies', 'fa-cookie'],
+                ['third_party_services', 'Third-Party Services', 'fa-puzzle-piece'],
+                ['key_clauses', 'Key Clauses', 'fa-key'],
+            ];
+            const textFields = [
+                ['data_retention', 'Data Retention'],
+                ['children_policy', "Children's Policy"],
+                ['data_security', 'Security Measures'],
+                ['international_transfers', 'International Transfers'],
+                ['automated_decisions', 'Automated Decisions'],
+            ];
+            let html = '';
+            listFields.forEach(([key, label]) => {
+                const arr = extracted[key];
+                if (arr && arr.length) {
+                    html += `<div class="clause-block"><h4>${label}</h4><ul>${arr.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul></div>`;
+                }
+            });
+            textFields.forEach(([key, label]) => {
+                const val = extracted[key];
+                if (val) {
+                    html += `<div class="clause-block"><h4>${label}</h4><p>${escapeHtml(val)}</p></div>`;
+                }
+            });
+            document.getElementById('extractedContent').innerHTML = html || '<div class="empty-state">No extracted data available.</div>';
+
+            // reset to overview tab
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            document.querySelector('.tab-btn[data-tab="overview"]').classList.add('active');
+            document.querySelector('.tab-panel[data-panel="overview"]').classList.add('active');
+
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+
+</html>
