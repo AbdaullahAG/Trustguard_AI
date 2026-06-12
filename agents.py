@@ -6,7 +6,12 @@ TrustGuard AI — Multi-Agent Privacy Policy Analyzer
 
 from openai import AzureOpenAI
 from dotenv import load_dotenv
-import os, json, re, hashlib, logging, time
+import os
+import json
+import re
+import hashlib
+import logging
+import time
 import requests
 from bs4 import BeautifulSoup
 CACHE_TTL_SECONDS = int(os.getenv("CACHE_TTL", 86400))  # default 24 h
@@ -22,14 +27,49 @@ client = AzureOpenAI(
 DEPLOYMENT = os.getenv("DEPLOYMENT_NAME", "gpt-5.4")
 
 BENCHMARKS = {
-    "TikTok":      {"risk_score": 82, "issues": ["sells voice data", "shares with governments", "retains data after deletion"]},
-    "Facebook":    {"risk_score": 78, "issues": ["tracks off-platform", "sells to advertisers", "vague retention"]},
-    "WhatsApp":    {"risk_score": 65, "issues": ["shares metadata with Meta", "phone number required"]},
-    "Google":      {"risk_score": 70, "issues": ["cross-service tracking", "ad profiling", "location history"]},
-    "Apple":       {"risk_score": 35, "issues": ["limited third-party sharing"]},
-    "Instagram":   {"risk_score": 76, "issues": ["behavioral tracking", "cross-platform profiling"]},
-    "X (Twitter)": {"risk_score": 72, "issues": ["ad profiling", "third-party data sharing", "vague retention"]},
-    "Snapchat":    {"risk_score": 68, "issues": ["location tracking", "content scanning", "ad targeting"]},
+    "TikTok": {
+        "risk_score": 82,
+        "issues": [
+            "sells voice data",
+            "shares with governments",
+            "retains data after deletion"]},
+    "Facebook": {
+        "risk_score": 78,
+        "issues": [
+            "tracks off-platform",
+            "sells to advertisers",
+            "vague retention"]},
+    "WhatsApp": {
+        "risk_score": 65,
+        "issues": [
+            "shares metadata with Meta",
+            "phone number required"]},
+    "Google": {
+        "risk_score": 70,
+        "issues": [
+            "cross-service tracking",
+            "ad profiling",
+            "location history"]},
+    "Apple": {
+        "risk_score": 35,
+        "issues": ["limited third-party sharing"]},
+    "Instagram": {
+        "risk_score": 76,
+        "issues": [
+            "behavioral tracking",
+            "cross-platform profiling"]},
+    "X (Twitter)": {
+        "risk_score": 72,
+        "issues": [
+            "ad profiling",
+            "third-party data sharing",
+            "vague retention"]},
+    "Snapchat": {
+        "risk_score": 68,
+        "issues": [
+            "location tracking",
+            "content scanning",
+            "ad targeting"]},
 }
 
 # ── In-memory analysis cache with TTL ────────────────────────────────────────
@@ -37,8 +77,10 @@ BENCHMARKS = {
 # For multi-worker production use Redis or a shared store.
 _cache: dict = {}   # key → {"result": ..., "ts": float}
 
+
 def _cache_key(text: str) -> str:
     return hashlib.sha256(text[:6000].encode()).hexdigest()
+
 
 def _cache_get(key: str):
     entry = _cache.get(key)
@@ -48,8 +90,10 @@ def _cache_get(key: str):
         del _cache[key]   # expired — evict
     return None
 
+
 def _cache_set(key: str, result: dict):
     _cache[key] = {"result": result, "ts": time.time()}
+
 
 def cache_clear():
     """Utility — call to wipe all cached entries (e.g. from tests)."""
@@ -69,7 +113,8 @@ def fetch_policy_from_url(url: str) -> str:
     resp = requests.get(url, headers=headers, timeout=20, allow_redirects=True)
     resp.raise_for_status()
     soup = BeautifulSoup(resp.text, "html.parser")
-    for tag in soup(["script", "style", "nav", "footer", "header", "aside", "iframe", "noscript"]):
+    for tag in soup(["script", "style", "nav", "footer",
+                    "header", "aside", "iframe", "noscript"]):
         tag.decompose()
     text = soup.get_text(separator="\n", strip=True)
     text = re.sub(r"\n{3,}", "\n\n", text)
@@ -100,16 +145,17 @@ def _call(system: str, user: str, temp: float = 0.1, retries: int = 3) -> dict:
                 model=DEPLOYMENT,
                 messages=[
                     {"role": "system", "content": system},
-                    {"role": "user",   "content": user},
+                    {"role": "user", "content": user},
                 ],
                 temperature=temp,
             )
-            raw   = response.choices[0].message.content
+            raw = response.choices[0].message.content
             clean = raw.replace("```json", "").replace("```", "").strip()
             match = re.search(r'\{[\s\S]*\}', clean)
             return json.loads(match.group() if match else clean)
         except json.JSONDecodeError as e:
-            last_err = ValueError(f"AI returned invalid JSON (attempt {attempt+1}): {e}")
+            last_err = ValueError(
+                f"AI returned invalid JSON (attempt {attempt+1}): {e}")
             log.warning(str(last_err))
             time.sleep(2 ** attempt)
         except Exception as e:
@@ -121,29 +167,35 @@ def _call(system: str, user: str, temp: float = 0.1, retries: int = 3) -> dict:
 
 
 def _flesch_kincaid(text: str) -> dict:
-    sentences = [s.strip() for s in re.split(r'[.!?]+', text) if len(s.strip()) > 3]
-    words     = re.findall(r'\b[a-zA-Z]+\b', text)
+    sentences = [
+        s.strip() for s in re.split(
+            r'[.!?]+',
+            text) if len(
+            s.strip()) > 3]
+    words = re.findall(r'\b[a-zA-Z]+\b', text)
     if not sentences or not words:
         return {"reading_ease": 0, "grade_level": 0, "word_count": 0,
                 "sentence_count": 0, "avg_sentence_length": 0}
 
     def syllables(w):
         w = w.lower()
-        if len(w) <= 3: return 1
+        if len(w) <= 3:
+            return 1
         c = len(re.findall(r'[aeiouy]+', w))
-        if w.endswith('e'): c -= 1
+        if w.endswith('e'):
+            c -= 1
         return max(1, c)
 
-    total_syl   = sum(syllables(w) for w in words)
-    avg_sl      = len(words) / len(sentences)
-    avg_syl     = total_syl / len(words)
-    ease        = 206.835 - (1.015 * avg_sl) - (84.6 * avg_syl)
-    grade       = (0.39 * avg_sl) + (11.8 * avg_syl) - 15.59
+    total_syl = sum(syllables(w) for w in words)
+    avg_sl = len(words) / len(sentences)
+    avg_syl = total_syl / len(words)
+    ease = 206.835 - (1.015 * avg_sl) - (84.6 * avg_syl)
+    grade = (0.39 * avg_sl) + (11.8 * avg_syl) - 15.59
     return {
-        "reading_ease":       round(max(0, min(100, ease)), 1),
-        "grade_level":        round(max(0, grade), 1),
-        "word_count":         len(words),
-        "sentence_count":     len(sentences),
+        "reading_ease": round(max(0, min(100, ease)), 1),
+        "grade_level": round(max(0, grade), 1),
+        "word_count": len(words),
+        "sentence_count": len(sentences),
         "avg_sentence_length": round(avg_sl, 1),
     }
 
@@ -173,8 +225,11 @@ Respond ONLY with valid JSON — no markdown, no extra text.
     if len(chunks) == 1:
         return _call(system, f"Extract clauses:\n\n{chunks[0]}")
 
-    all_ex = [_call(system, f"Extract clauses from part {i+1}/{len(chunks)}:\n\n{c}")
-              for i, c in enumerate(chunks)]
+    all_ex = [
+        _call(
+            system,
+            f"Extract clauses from part {i+1}/{len(chunks)}:\n\n{c}") for i,
+        c in enumerate(chunks)]
     merge_sys = """Merge multiple extractions from the same policy into one.
 Remove duplicates. Respond ONLY with valid JSON using the same schema."""
     return _call(merge_sys, f"Merge:\n\n{json.dumps(all_ex, indent=2)}")
@@ -204,7 +259,10 @@ Respond ONLY with valid JSON — no markdown, no extra text.
   "data_retention_clarity": "<clear|vague|missing>",
   "verdict": "2-sentence plain-language verdict for a non-lawyer"
 }"""
-    return _call(system, f"Analyze:\n\n{json.dumps(extracted, indent=2)}", temp=0.2)
+    return _call(
+        system,
+        f"Analyze:\n\n{json.dumps(extracted, indent=2)}",
+        temp=0.2)
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -227,7 +285,8 @@ Respond ONLY with valid JSON — no markdown, no extra text.
   "manipulation_tactics": ["list of tactics"],
   "summary": "2-sentence summary"
 }"""
-    return _call(system,
+    return _call(
+        system,
         f"Detect dark patterns:\n\nExtracted:\n{json.dumps(extracted, indent=2)}\n\nText:\n{policy_text[:3000]}",
         temp=0.15)
 
@@ -237,7 +296,7 @@ Respond ONLY with valid JSON — no markdown, no extra text.
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def readability_agent(policy_text: str) -> dict:
-    fk     = _flesch_kincaid(policy_text)
+    fk = _flesch_kincaid(policy_text)
     system = """You are TrustGuard's Readability Agent.
 Analyze how accessible this policy is for ordinary users.
 Respond ONLY with valid JSON — no markdown, no extra text.
@@ -253,11 +312,11 @@ Respond ONLY with valid JSON — no markdown, no extra text.
 }"""
     result = _call(system, f"Analyze readability:\n\n{policy_text[:4000]}")
     result.update({
-        "flesch_reading_ease":  fk["reading_ease"],
-        "flesch_grade_level":   fk["grade_level"],
-        "word_count":           fk["word_count"],
-        "sentence_count":       fk["sentence_count"],
-        "avg_sentence_length":  fk.get("avg_sentence_length", 0),
+        "flesch_reading_ease": fk["reading_ease"],
+        "flesch_grade_level": fk["grade_level"],
+        "word_count": fk["word_count"],
+        "sentence_count": fk["sentence_count"],
+        "avg_sentence_length": fk.get("avg_sentence_length", 0),
     })
     return result
 
@@ -286,7 +345,10 @@ Respond ONLY with valid JSON — no markdown, no extra text.
   "appeal_mechanism": "<available|not_specified|not_available>",
   "summary": "2-sentence summary"
 }"""
-    return _call(system, f"Analyze rights:\n\n{json.dumps(extracted, indent=2)}", temp=0.15)
+    return _call(
+        system,
+        f"Analyze rights:\n\n{json.dumps(extracted, indent=2)}",
+        temp=0.15)
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -313,7 +375,8 @@ Respond ONLY with valid JSON — no markdown, no extra text.
   "recommendation": "<Use freely|Use with caution|Avoid if possible|Avoid>",
   "privacy_tier": "<S|A|B|C|D|F>"
 }}"""
-    return _call(system,
+    return _call(
+        system,
         f"Compare {site_name} (score {analysis.get('risk_score', 50)}):\n{json.dumps(analysis, indent=2)}")
 
 
@@ -322,7 +385,7 @@ Respond ONLY with valid JSON — no markdown, no extra text.
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def trustguard_pipeline(policy_text: str, site_name: str = "Unknown") -> dict:
-    key    = _cache_key(policy_text)
+    key = _cache_key(policy_text)
     cached = _cache_get(key)
     if cached:
         log.info(f"Cache hit for {site_name} (TTL {CACHE_TTL_SECONDS}s)")
@@ -330,43 +393,44 @@ def trustguard_pipeline(policy_text: str, site_name: str = "Unknown") -> dict:
 
     log.info(f"Analyzing: {site_name} ({len(policy_text)} chars)")
 
-    extracted    = extractor_agent(policy_text)
-    analysis     = reasoning_agent(extracted)
+    extracted = extractor_agent(policy_text)
+    analysis = reasoning_agent(extracted)
     dark_patterns = dark_patterns_agent(policy_text, extracted)
-    readability  = readability_agent(policy_text)
-    rights       = rights_agent(extracted)
-    comparison   = comparator_agent(analysis, site_name)
+    readability = readability_agent(policy_text)
+    rights = rights_agent(extracted)
+    comparison = comparator_agent(analysis, site_name)
 
     # ── TrustGuard Index — weighted composite score ──────────────────────────
     # Weights: risk(50%) + dark_patterns(30%) + rights_gap(20%)
     # All inputs normalised to 0-100 where 100 = most dangerous.
-    risk_score    = analysis.get("risk_score", 50)
-    dp_score      = dark_patterns.get("dark_pattern_score", 50)
-    rights_gap    = 100 - rights.get("rights_score", 50)   # invert: low rights → high danger
+    risk_score = analysis.get("risk_score", 50)
+    dp_score = dark_patterns.get("dark_pattern_score", 50)
+    # invert: low rights → high danger
+    rights_gap = 100 - rights.get("rights_score", 50)
     tgi = round(
         0.50 * risk_score +
-        0.30 * dp_score   +
+        0.30 * dp_score +
         0.20 * rights_gap
     )
     tgi_label = (
-        "Trusted"     if tgi < 25  else
-        "Acceptable"  if tgi < 45  else
-        "Concerning"  if tgi < 65  else
-        "Risky"       if tgi < 80  else
+        "Trusted" if tgi < 25 else
+        "Acceptable" if tgi < 45 else
+        "Concerning" if tgi < 65 else
+        "Risky" if tgi < 80 else
         "Dangerous"
     )
 
     result = {
-        "site":                   site_name,
-        "text_length":            len(policy_text),
-        "trustguard_index":       tgi,
-        "trustguard_label":       tgi_label,
-        "extracted_clauses":      extracted,
-        "risk_analysis":          analysis,
-        "dark_patterns":          dark_patterns,
-        "readability":            readability,
-        "user_rights":            rights,
-        "benchmark_comparison":   comparison,
+        "site": site_name,
+        "text_length": len(policy_text),
+        "trustguard_index": tgi,
+        "trustguard_label": tgi_label,
+        "extracted_clauses": extracted,
+        "risk_analysis": analysis,
+        "dark_patterns": dark_patterns,
+        "readability": readability,
+        "user_rights": rights,
+        "benchmark_comparison": comparison,
     }
     _cache_set(key, result)
     return result
