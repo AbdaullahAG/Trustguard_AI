@@ -131,6 +131,11 @@ trustguard-ai/
 5. **Change tracking** — silent policy updates are a real threat; we catch them
 
 ---
+## 📺 Demo Video
+
+https://github.com/user-attachments/assets/7b26619c-3c1d-4183-b567-44622f12f195
+
+---
 
 ## 📄 License
 
