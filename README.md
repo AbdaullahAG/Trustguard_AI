@@ -4,7 +4,7 @@
 
 > *"No one reads privacy policies. TrustGuard does. "*
 
----
+--- 
 
 ## 🏆 What it does
 
