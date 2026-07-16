@@ -1,7 +1,7 @@
 """
 TrustGuard AI — Multi-Agent Privacy Policy Analyzer
 ====================================================
-6 specialized AI agents + retry logic + in-memory caching.
+6 specialized AI agents + retry logic + in-memory caching. 
 """
 
 from openai import AzureOpenAI
