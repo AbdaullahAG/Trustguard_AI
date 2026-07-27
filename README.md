@@ -3,7 +3,7 @@
 **Multi-Agent Privacy Policy Analyzer** — Built for the [Agents League Hackathon](https://aka.ms/AgentsLeagueRules) · Microsoft Foundry · Reasoning Agents Track
 
 > *"No one reads privacy policies. TrustGuard does. "*
-
+ 
 --- 
 
 ## 🏆 What it does
