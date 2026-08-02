@@ -5,7 +5,7 @@
 > *"No one reads privacy policies. TrustGuard does. "*
  
 --- 
-
+ 
 ## 🏆 What it does
 
 TrustGuard AI deploys **6 specialized AI agents** in a sequential reasoning pipeline to analyze any privacy policy or Terms of Service — and benchmark it against TikTok, Facebook, WhatsApp, and more.
