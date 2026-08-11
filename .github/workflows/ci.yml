@@ -21,7 +21,7 @@ steps:
     uses: actions/setup-python@v5
     with:
       python-version: "3.11"
-      cache: "pip"
+      cache: pip
 
   - name: Install dependencies
     run: |
@@ -40,4 +40,3 @@ steps:
       AZURE_ENDPOINT: https://placeholder.openai.azure.com/
       AZURE_API_KEY: placeholder
       DEPLOYMENT_NAME: gpt-5.4
-```
